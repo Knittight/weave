@@ -53,7 +53,7 @@ def build_command(runtime, file, port):
         return ["ruby", file, str(port)]
     if runtime == "go":
         return ["go", "run", file, str(port)]
-    return [runtime, file]
+    return [runtime, file, str(port)]
 
 # ----------------------------
 # Commands
