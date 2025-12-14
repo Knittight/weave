@@ -119,8 +119,9 @@ def create_preset(args):
     templates = {
         "python": """#!/usr/bin/env python3
 from http.server import HTTPServer, SimpleHTTPRequestHandler
+import sys
 
-PORT = 8000
+PORT = int(sys.argv[1]) if len(sys.argv) > 1 else 8000
 
 with HTTPServer(('0.0.0.0', PORT), SimpleHTTPRequestHandler) as server:
     print(f"Serving on port {PORT}")
@@ -128,7 +129,7 @@ with HTTPServer(('0.0.0.0', PORT), SimpleHTTPRequestHandler) as server:
 """,
         "node": """const express = require('express');
 const app = express();
-const PORT = 8000;
+const PORT = process.argv[2] || 8000;
 
 app.get('/', (req, res) => {
     res.send('Hello from Node.js server!');
@@ -140,7 +141,7 @@ app.listen(PORT, () => {
 """,
         "ruby": """require 'webrick'
 
-port = 8000
+port = ARGV[0] ? ARGV[0].to_i : 8000
 server = WEBrick::HTTPServer.new(Port: port, DocumentRoot: Dir.pwd)
 
 trap('INT') { server.shutdown }
@@ -152,10 +153,14 @@ server.start
 import (
     "fmt"
     "net/http"
+    "os"
 )
 
 func main() {
     port := "8000"
+    if len(os.Args) > 1 {
+        port = os.Args[1]
+    }
     fmt.Println("Server running on port", port)
     http.ListenAndServe(":" + port, http.FileServer(http.Dir(".")))
 }
